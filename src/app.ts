@@ -6,11 +6,11 @@ import { v4 as uuidv4 } from "uuid";
 
 const PORT = 5000;
 
-let task: ITask[] = [];
+let tasks: ITask[] = [];
 
 app.get("/api/task", (req, res) => {
   try {
-    res.json(task);
+    res.json(tasks);
   } catch (error) {
     console.log(error);
   }
@@ -18,24 +18,18 @@ app.get("/api/task", (req, res) => {
 
 
 
-app.get("/api/task/:id", (req, res) => {
-    const { id } = req.params;
-    var taskItem: ITask
-    const getTask = task.filter((item) => {
-        taskItem.id = item.id
-        taskItem.name = item.name
-        
-      return taskItem
-    });
-    
+app.get("/api/task/:taskname", (req, res) => {
+    const { taskname } = req.params;
+
+    let task = tasks.find(({name}) => name == taskname);
     res.json({
-      message: task.map(item=>id),
+      task,
     });
   });
 app.post("/api/task", (req, res) => {
   const newTask = req.body as ITask;
   newTask.id = uuidv4();
-  task.push(newTask);
+  tasks.push(newTask);
   res.json({
     message: "added task",
   });
@@ -44,11 +38,11 @@ app.post("/api/task", (req, res) => {
 app.put("/api/task/:id", (req, res) => {
   const { id } = req.params;
   const updateTask = req.body as ITask;
-  const updateTaskList = task.filter((item) => {
+  const updateTaskList = tasks.filter((item) => {
     return item.id !== id;
   });
   updateTaskList.push(updateTask);
-  task = updateTaskList;
+  tasks = updateTaskList;
 
   res.json({
     message: "updeted  task",
@@ -57,10 +51,10 @@ app.put("/api/task/:id", (req, res) => {
 
 app.delete("/api/task/:id", (req, res) => {
   const { id } = req.params;
-  const deleteTask = task.filter((item) => {
+  const deleteTask = tasks.filter((item) => {
     return item.id !== id;
   });
-  task = deleteTask;
+  tasks = deleteTask;
   res.json({
     message: "deleted task",
   });
