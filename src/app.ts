@@ -39,8 +39,10 @@ app.put("/api/task/:id", (req, res) => {
   const { id } = req.params;
   const updateTask = req.body as ITask;
   const updateTaskList = tasks.filter((item) => {
+    item.status!=item.status
     return item.id !== id;
   });
+  
   updateTaskList.push(updateTask);
   tasks = updateTaskList;
 
